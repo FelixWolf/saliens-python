@@ -45,15 +45,15 @@ def main(token, planet=None):
     print("Joined planet {}".format(planet))
     while True:
         planetInfo = serverCtx.GetPlanet(planet)
-        zoneid = None
-        for Zone in planetInfo["response"]["planets"][0]["zones"]:
-            if Zone["captured"] == False:
-                zone = Zone["zone_position"]
+        zone = None
+        for zone in planetInfo["response"]["planets"][0]["zones"]:
+            if zone["captured"] == False:
+                zone = zone
                 break
         
         
         if zone != None:
-            print("Attacking zone {}".format(zone))
+            print("Attacking zone {}".format(zone["zone_position"]))
         else:
             print("Out of zones? Finding a new planet!")
             planets = serverCtx.GetPlanets()
@@ -70,10 +70,22 @@ def main(token, planet=None):
         #Sleep before joining zone
         time.sleep(random.randint(5,10))
         
-        serverCtx.JoinZone(zone)
+        serverCtx.JoinZone(zone["zone_position"])
+        
         time.sleep(120) #Sleep for 2 minutes
         
-        scoreStats = serverCtx.ReportScore(2000+random.randint(0,300))
+        #Fix for difficulty score difference thing possibly?
+        score = 120
+        if zone["difficulty"] == 1:
+            score = score * 5 - 5
+        elif zone["difficulty"] == 2:
+            score = score * 10 - 10
+        elif zone["difficulty"] == 3:
+            score = score * 20 - 20
+        else:
+            print("PANIC! THEY UPDATED THE MAX DIFFICULTY!")
+        
+        scoreStats = serverCtx.ReportScore(score) #2000+random.randint(0,300)
         print("Current score = {}/{}; Current Level = {}".format(
             scoreStats["response"]["new_score"],
             scoreStats["response"]["next_level_score"],
@@ -223,4 +235,6 @@ if __name__ == "__main__":
         exit()
     
     main(args.token, args.planet)
+        
+    
     
