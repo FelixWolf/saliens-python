@@ -64,7 +64,7 @@ def main(token, planet=None):
                         Planet["state"]["name"],
                         int(Planet["state"]["capture_progress"]*100)
                     ))
-                    planet = Planet["id"]            
+                    planet = Planet["id"]
                     break
         
         #Sleep before joining zone
@@ -77,20 +77,23 @@ def main(token, planet=None):
         #Fix for difficulty score difference thing possibly?
         score = 120
         if zone["difficulty"] == 1:
-            score = score * 5 - 5
+            score = 595
         elif zone["difficulty"] == 2:
-            score = score * 10 - 10
+            score = 1190
         elif zone["difficulty"] == 3:
-            score = score * 20 - 20
+            score = 2380
         else:
             print("PANIC! THEY UPDATED THE MAX DIFFICULTY!")
         
-        scoreStats = serverCtx.ReportScore(score) #2000+random.randint(0,300)
-        print("Current score = {}/{}; Current Level = {}".format(
-            scoreStats["response"]["new_score"],
-            scoreStats["response"]["next_level_score"],
-            scoreStats["response"]["new_level"]
-        ))
+        try:
+            scoreStats = serverCtx.ReportScore(score) #2000+random.randint(0,300)
+            print("Current score = {}/{}; Current Level = {}".format(
+                scoreStats["response"]["new_score"],
+                scoreStats["response"]["next_level_score"],
+                scoreStats["response"]["new_level"]
+            ))
+        except KeyError:
+            print("It tossed our request(Too early?), maybe next time. :(")
     
 
 class CServerInterface:
