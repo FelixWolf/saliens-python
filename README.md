@@ -6,7 +6,10 @@ Tested only on linux.
 `python3 saliens.py [--token <token>] [--planet <planet id>] [--list-planets]` <br/>
 If `--list-planets` is used, it lists the planets and exits. If no `token` is given, it opens the browser and asks for input.
 * Where `token` is a token from https://steamcommunity.com/saliengame/gettoken
-* Where `planet id` is a planet from `--list-planets`
+* Where `planet id` is a **prefered** planet from `--list-planets` (Script will still automatically join a new planet if no tiles are avaliable)
+
+# Bonus saliens.js
+Saliens.js was my first attempt. It is written purely in javascript and you just plop it into console and wait. Figured I'd might as well include it because not everyone is willing to install python.
 
 # License
 ```python
