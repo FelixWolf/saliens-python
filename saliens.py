@@ -37,7 +37,7 @@ def main(token, planet=None):
         pinfo["response"]["level"]
     ))
     if not planet:
-        planet = pinfo["active_planet"]
+        planet = pinfo['response']["active_planet"]
         #planets = serverCtx.GetPlanets()
         #planet = random.choice(planets["response"]["planets"])["id"]
     
@@ -46,14 +46,16 @@ def main(token, planet=None):
     while True:
         planetInfo = serverCtx.GetPlanet(planet)
         zone = None
-        for zone in planetInfo["response"]["planets"][0]["zones"]:
-            if zone["captured"] == False:
-                zone = zone
+        for i in range(3,0,-1):
+            for zone in planetInfo["response"]["planets"][0]["zones"]:
+                if zone["captured"] == False and zone["difficulty"] == i:
+                    zone = zone
+                    break
+            if zone != None:
                 break
         
-        
         if zone != None:
-            print("Attacking zone {}".format(zone["zone_position"]))
+            print("Attacking zone {0} diff = {1}".format(zone["zone_position"], zone["difficulty"]))
         else:
             print("Out of zones? Finding a new planet!")
             planets = serverCtx.GetPlanets()
@@ -86,7 +88,7 @@ def main(token, planet=None):
             print("PANIC! THEY UPDATED THE MAX DIFFICULTY!")
         
         try:
-            scoreStats = serverCtx.ReportScore(score) #2000+random.randint(0,300)
+            scoreStats = serverCtx.ReportScore(score) #
             print("Current score = {}/{}; Current Level = {}".format(
                 scoreStats["response"]["new_score"],
                 scoreStats["response"]["next_level_score"],
