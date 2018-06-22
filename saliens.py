@@ -37,7 +37,7 @@ def main(token, planet=None):
         pinfo["response"]["level"]
     ))
     if not planet:
-        planet = pinfo["active_planet"]
+        planet = pinfo["response"]["active_planet"]
         #planets = serverCtx.GetPlanets()
         #planet = random.choice(planets["response"]["planets"])["id"]
     
