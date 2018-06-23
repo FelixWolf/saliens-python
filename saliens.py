@@ -45,6 +45,9 @@ def main(token, planet=None, clan=None):
     
     if not planet:
         planet = pinfo['response']["active_planet"]
+    elif pinfo['response']["active_planet"] != planet:
+        print("Leaving planet {}".format(pinfo['response']["active_planet"]))
+        serverCtx.LeaveGameInstance(planet)
     
     serverCtx.JoinPlanet(planet)
     print("Joined planet {}".format(planet))
@@ -67,6 +70,8 @@ def main(token, planet=None, clan=None):
             planets = serverCtx.GetPlanets()
             for Planet in planets["response"]["planets"]:
                 if Planet["state"]["captured"] == False:
+                    print("Leaving planet {}".format(pinfo['response']["active_planet"]))
+                    serverCtx.LeaveGameInstance(planet)
                     print("Planet #{} - {} ({}%) seems nice, joining there!".format(
                         Planet["id"],
                         Planet["state"]["name"],
@@ -213,7 +218,7 @@ class CServerInterface:
     
     def LeaveGameInstance(self, instanceid):
         return self.post(
-            self.BuildURL('ITerritoryControlMinigameService', 'LeaveGame'),
+            self.BuildURL('IMiniGameService', 'LeaveGame'),
             urllib.parse.urlencode({
                 "gameid": instanceid,
                 "access_token": self.token
