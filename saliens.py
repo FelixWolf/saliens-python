@@ -47,20 +47,21 @@ def main(token, planet=None):
         planetInfo = serverCtx.GetPlanet(planet)
         zone = None
         for i in range(3,0,-1):
-            for zone in planetInfo["response"]["planets"][0]["zones"]:
-                if zone["captured"] == False and zone["difficulty"] == i:
-                    zone = zone
+            for Zone in planetInfo["response"]["planets"][0]["zones"]:
+                if Zone["captured"] == False and Zone["difficulty"] == i:
+                    zone = Zone
                     break
             if zone != None:
                 break
         
         if zone != None:
-            print("Attacking zone {0} diff = {1}".format(zone["zone_position"], zone["difficulty"]))
+            print("Attacking zone {0}; diff = {1}".format(zone["zone_position"], zone["difficulty"]))
         else:
             print("Out of zones? Finding a new planet!")
+            zoneBlacklist = []
             planets = serverCtx.GetPlanets()
             for Planet in planets["response"]["planets"]:
-                if Planet["state"]["capture_progress"] < 1:
+                if Planet["state"]["captured"] == False:
                     print("Planet #{} - {} ({}%) seems nice, joining there!".format(
                         Planet["id"],
                         Planet["state"]["name"],
