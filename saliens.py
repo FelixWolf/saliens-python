@@ -28,18 +28,23 @@ import webbrowser
 import random
 import time
 
-def main(token, planet=None):
+def main(token, planet=None, clan=None):
     serverCtx = CServerInterface(token)
+    if clan:
+        serverCtx.RepresentClan(clan)
+    
     pinfo = serverCtx.GetPlayerInfo()
     print("Current score = {}/{}; Current Level = {}".format(
         pinfo["response"]["score"],
         pinfo["response"]["next_level_score"],
         pinfo["response"]["level"]
     ))
+    if "clan_info" in pinfo["response"]:
+        if "name" in pinfo["response"]["clan_info"]: #Because I cannot remember if clan_info is {} when undefined
+            print("Representing clan \"{}\"".format(pinfo["response"]["clan_info"]["name"]))
+    
     if not planet:
         planet = pinfo['response']["active_planet"]
-        #planets = serverCtx.GetPlanets()
-        #planet = random.choice(planets["response"]["planets"])["id"]
     
     serverCtx.JoinPlanet(planet)
     print("Joined planet {}".format(planet))
@@ -75,7 +80,7 @@ def main(token, planet=None):
         
         serverCtx.JoinZone(zone["zone_position"])
         
-        time.sleep(120) #Sleep for 2 minutes
+        time.sleep(110) #Sleep for 2 minutes - 10 seconds?
         
         #Fix for difficulty score difference thing possibly?
         score = 120
@@ -219,6 +224,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--token", help="Token value from https://steamcommunity.com/saliengame/gettoken")
     parser.add_argument("-p", "--planet", help="Planet ID")
+    parser.add_argument("-c", "--clan", help="Clan ID")
     parser.add_argument("-l", "--list-planets", action='store_true', help="List planets")
     args = parser.parse_args()
     if args.list_planets:
@@ -240,7 +246,7 @@ if __name__ == "__main__":
         print("Token is invalid, it should look like 00112233445566778899aabbccddeeff and be 32 characters long!");
         exit()
     
-    main(args.token, args.planet)
+    main(args.token, args.planet, args.clan)
         
     
     
