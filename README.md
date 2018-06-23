@@ -3,10 +3,11 @@ Python saliens bot thing I wrote for fun. Might be buggy. Requires [python3](htt
 Tested only on linux.
 
 # Usage
-`python3 saliens.py [--token <token>] [--planet <planet id>] [--list-planets]` <br/>
+`python3 saliens.py [--token <token>] [--planet <planet id>] [--clan <clan id>] [--list-planets]` <br/>
 If `--list-planets` is used, it lists the planets and exits. If no `token` is given, it opens the browser and asks for input.
 * Where `token` is a token from https://steamcommunity.com/saliengame/gettoken
 * Where `planet id` is a **prefered** planet from `--list-planets` (Script will still automatically join a new planet if no tiles are avaliable)
+* Where `clan id` is a value from `https://steamcommunity.com/id/<YOUR_USERNAME_URL_HERE>/ajaxgroupinvite?select_primary=1`
 
 # Bonus saliens.js
 Saliens.js was my first attempt. It is written purely in javascript and you just plop it into console and wait. Figured I'd might as well include it because not everyone is willing to install python.
