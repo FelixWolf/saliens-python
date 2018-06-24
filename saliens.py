@@ -21,12 +21,13 @@
 
 import argparse
 import json
-import urllib.request
-import urllib.parse
-import urllib.error
-import webbrowser
 import random
 import time
+import urllib.error
+import urllib.parse
+import urllib.request
+import webbrowser
+
 
 def main(token, planet=None, clan=None):
     serverCtx = CServerInterface(token)
@@ -42,12 +43,23 @@ def main(token, planet=None, clan=None):
     if "clan_info" in pinfo["response"]:
         if "name" in pinfo["response"]["clan_info"]: #Because I cannot remember if clan_info is {} when undefined
             print("Representing clan \"{}\"".format(pinfo["response"]["clan_info"]["name"]))
-    
-    if not planet:
-        planet = pinfo['response']["active_planet"]
-    elif pinfo['response']["active_planet"] != planet:
-        print("Leaving planet {}".format(pinfo['response']["active_planet"]))
-        serverCtx.LeaveGameInstance(planet)
+
+    if "active_planet" in pinfo['response']:
+        if not planet:
+            planet = pinfo['response']["active_planet"]
+        elif pinfo['response']["active_planet"] != planet:
+            print("Leaving planet {}".format(pinfo['response']["active_planet"]))
+            serverCtx.LeaveGameInstance(planet)
+    else:
+        planets = serverCtx.GetPlanets()
+        for Planet in planets["response"]["planets"]:
+            if Planet["state"]["captured"] == False:
+                print("Planet #{} - {} ({}%) seems nice, joining there!".format(
+                    Planet["id"],
+                    Planet["state"]["name"],
+                    int(Planet["state"]["capture_progress"] * 100)
+                ))
+                planet = Planet["id"]
     
     serverCtx.JoinPlanet(planet)
     print("Joined planet {}".format(planet))
